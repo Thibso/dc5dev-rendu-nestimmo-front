@@ -4,7 +4,6 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -12,7 +11,7 @@ import {
 } from "@/components/ui/drawer";
 
 import { Button } from "@/components/ui/button";
-import FormPost from "./FormPost";
+import FormCategory from "./FormCategory";
 
 type DrawerPropsType = {
   open: boolean;
@@ -22,7 +21,7 @@ type DrawerPropsType = {
   isPending: boolean;
 };
 
-const DrawerPost = ({
+const DrawerCategory = ({
   open,
   setOpen,
   handleFunction,
@@ -36,11 +35,8 @@ const DrawerPost = ({
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle className="text-center">Ajouter un post</DrawerTitle>
-          <DrawerDescription className="text-center">
-            Renseignez l'enssemble des champs.
-          </DrawerDescription>
-          <FormPost handleFunction={handleFunction} isPending={isPending} />
+          <DrawerTitle className="text-center">Create new category</DrawerTitle>
+          <FormCategory handleFunction={handleFunction} isPending={isPending} />
         </DrawerHeader>
         <DrawerFooter>
           <DrawerClose>
@@ -52,4 +48,4 @@ const DrawerPost = ({
   );
 };
 
-export default DrawerPost;
+export default DrawerCategory;

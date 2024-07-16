@@ -1,39 +1,41 @@
 "use client";
 
+import DrawerCategory from "@/components/category/DrawerCategory";
 import DialogConfirmDelete from "@/components/globals/DialogConfirmDelete";
-import DrawerPost from "@/components/post/DrawerPost";
 import { useToast } from "@/components/ui/use-toast";
-import { deletePost, fetchPostById, updatePost } from "@/services/post.service";
+import {
+  deleteCategory,
+  fetchCategoryById,
+  updateCategory,
+} from "@/services/category.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 
-type PostDetailParams = {
+type CategoryDetailParams = {
   id: string;
 };
 
-const PostDetail = () => {
-  const { id } = useParams<PostDetailParams>();
+const CategoryDetail = () => {
+  const { id } = useParams<CategoryDetailParams>();
   const router = useRouter();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
 
   const { isPending, error, data } = useQuery({
-    queryKey: ["getPostById"],
-    queryFn: () => fetchPostById(id),
+    queryKey: ["getCategoryById"],
+    queryFn: () => fetchCategoryById(id),
   });
-
-  console.log(data);
 
   // UPDATE
 
   const queryClient = useQueryClient();
 
   const updtateMutation = useMutation({
-    mutationFn: updatePost,
+    mutationFn: updateCategory,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["getPostById"],
+        queryKey: ["getCategoryById"],
       });
       setOpen(false);
     },
@@ -42,24 +44,21 @@ const PostDetail = () => {
   const handleUpdate = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const updatePostDTO = {
+    const updateCategoryDTO = {
       id: id,
-      title: e.target.title.value,
-      description: e.target.description.value,
-      category: e.target.category.value,
+      name: e.target.name.value,
     };
 
-    updtateMutation.mutate(updatePostDTO);
+    updtateMutation.mutate(updateCategoryDTO);
   };
 
   // DELETE
 
   const deleteMutation = useMutation({
-    mutationFn: deletePost,
+    mutationFn: deleteCategory,
     onSuccess: () => {
       toast({
-        title: "Post deleted",
-        description: "Your post has been deleted",
+        title: "Category deleted",
       });
       router.push("/");
     },
@@ -76,15 +75,10 @@ const PostDetail = () => {
 
   return (
     <div className="max-w-screen-lg m-auto my-8">
-      <h1 className="text-xl font-bold mb-4">{data.title}</h1>
-      <p className="text-md mb-8">{data.description}</p>
-      <p className="text-md mb-8">
-        <span className="font-bold underline">Catégorie :</span>{" "}
-        {data.category.name}
-      </p>
+      <h1 className="text-xl font-bold mb-8">{data.name}</h1>
 
       <div className="flex gap-8">
-        <DrawerPost
+        <DrawerCategory
           open={open}
           setOpen={setOpen}
           handleFunction={handleUpdate}
@@ -100,4 +94,4 @@ const PostDetail = () => {
   );
 };
 
-export default PostDetail;
+export default CategoryDetail;
